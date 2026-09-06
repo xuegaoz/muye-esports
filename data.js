@@ -84,17 +84,17 @@ window.MUYE_DATA = {
       items: [
         {
           title: "一日一签 · 总览",
-          image: "images/fortune/overview.svg",
+          image: "images/fortune/overview.png",
           description: "八签总览图。"
         },
         {
           title: "签文解析 · 壹",
-          image: "images/fortune/detail-1.svg",
+          image: "images/fortune/detail-1.png",
           description: "01—04 签文解析。"
         },
         {
           title: "签文解析 · 贰",
-          image: "images/fortune/detail-2.svg",
+          image: "images/fortune/detail-2.png",
           description: "05—08 签文解析。"
         }
       ]
@@ -107,7 +107,7 @@ window.MUYE_DATA = {
       items: [
         {
           title: "牧野电竞 · 下单须知",
-          image: "images/rules/order-guide.svg",
+          image: "images/rules/order-guide.png",
           description: "店内下单、结算与服务说明。"
         }
       ]
