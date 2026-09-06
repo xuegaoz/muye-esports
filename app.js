@@ -1,18 +1,290 @@
 (() => {
-const data=window.MUYE_DATA;
-const home=document.getElementById('homeView'), list=document.getElementById('listView'), search=document.getElementById('searchView');
-const categoryGrid=document.getElementById('categoryGrid'), cardGrid=document.getElementById('cardGrid'), searchGrid=document.getElementById('searchGrid');
-const title=document.getElementById('sectionTitle'), desc=document.getElementById('sectionDesc'), count=document.getElementById('itemCount');
-const input=document.getElementById('searchInput'), clear=document.getElementById('clearSearch');
-const viewer=document.getElementById('viewer'), viewerTitle=document.getElementById('viewerTitle'), viewerEnglish=document.getElementById('viewerEnglish'), viewerCategory=document.getElementById('viewerCategory'), viewerImage=document.getElementById('viewerImage'), loading=document.getElementById('imageLoading');
-let current=null;
-function showOnly(el){[home,list,search].forEach(x=>x.hidden=x!==el);window.scrollTo({top:0,behavior:'smooth'})}
-function renderHome(){categoryGrid.innerHTML=data.categories.map(c=>`<article class="category-card" data-id="${c.id}"><div class="emoji">${c.emoji}</div><h3>${c.title}</h3><p>${c.subtitle}</p><span class="meta">${c.items.length} 项内容</span><span class="arrow">›</span></article>`).join('');categoryGrid.querySelectorAll('.category-card').forEach(el=>el.onclick=()=>openCategory(el.dataset.id))}
-function cardHtml(item,cat){return `<article class="price-card"><div class="card-thumb"><img src="${item.thumb}" alt="${item.title}" loading="lazy" decoding="async"><span class="card-tag">${cat.emoji} ${cat.title}</span></div><div class="card-body"><h3>${item.title}</h3>${item.english?`<div class="en">${item.english}</div>`:''}<p>${item.description||''}</p><span class="view-link">查看高清价目表 ↗</span></div></article>`}
-function bindCards(container,arr){container.querySelectorAll('.price-card').forEach((el,i)=>el.onclick=()=>openViewer(arr[i].item,arr[i].cat))}
-function openCategory(id){const cat=data.categories.find(c=>c.id===id);if(!cat)return;current=cat;title.textContent=cat.title;desc.textContent=cat.subtitle;count.textContent=`${cat.items.length} 项`;const arr=cat.items.map(item=>({item,cat}));cardGrid.innerHTML=arr.map(x=>cardHtml(x.item,x.cat)).join('');bindCards(cardGrid,arr);showOnly(list)}
-function doSearch(){const q=input.value.trim().toLowerCase();if(!q){showOnly(current?list:home);return}const arr=[];data.categories.forEach(cat=>cat.items.forEach(item=>{const h=`${item.title} ${item.english||''} ${item.description||''} ${cat.title}`.toLowerCase();if(h.includes(q))arr.push({item,cat})}));document.getElementById('searchTitle').textContent=`“${input.value.trim()}” 的搜索结果`;document.getElementById('searchCount').textContent=`${arr.length} 项`;document.getElementById('emptyState').hidden=arr.length>0;searchGrid.innerHTML=arr.map(x=>cardHtml(x.item,x.cat)).join('');bindCards(searchGrid,arr);showOnly(search)}
-function openViewer(item,cat){viewerTitle.textContent=item.title;viewerEnglish.textContent=item.english||'';viewerCategory.textContent=`${cat.emoji} ${cat.title}`;viewer.classList.add('open');document.body.style.overflow='hidden';loading.hidden=false;loading.textContent='高清图加载中…';viewerImage.hidden=true;viewerImage.removeAttribute('src');const im=new Image();im.onload=()=>{viewerImage.src=item.full;viewerImage.hidden=false;loading.hidden=true};im.onerror=()=>loading.textContent='图片加载失败，请稍后重试。';im.src=item.full}
-function closeViewer(){viewer.classList.remove('open');document.body.style.overflow='';viewerImage.removeAttribute('src')}
-document.getElementById('backBtn').onclick=()=>{current=null;showOnly(home)};document.getElementById('searchBackBtn').onclick=()=>{input.value='';showOnly(current?list:home)};input.addEventListener('input',doSearch);clear.onclick=()=>{input.value='';showOnly(current?list:home)};document.querySelectorAll('[data-close-viewer]').forEach(x=>x.onclick=closeViewer);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeViewer()});renderHome();showOnly(home);
+  const DATA = window.MUYE_DATA;
+  const glyphs = {
+    basic: "￥",
+    fun: "✦",
+    fortune: "签",
+    rules: "阅"
+  };
+
+  const homeView = document.getElementById("homeView");
+  const categoryView = document.getElementById("categoryView");
+  const searchView = document.getElementById("searchView");
+
+  const categoryGrid = document.getElementById("categoryGrid");
+  const cardList = document.getElementById("cardList");
+  const bottomNav = document.getElementById("bottomNav");
+
+  const categoryTitle = document.getElementById("categoryTitle");
+  const categorySubtitle = document.getElementById("categorySubtitle");
+  const categoryMark = document.getElementById("categoryMark");
+  const categoryCount = document.getElementById("categoryCount");
+
+  const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+  const searchList = document.getElementById("searchList");
+  const searchCount = document.getElementById("searchCount");
+  const searchKeyword = document.getElementById("searchKeyword");
+  const emptySearch = document.getElementById("emptySearch");
+
+  const logoHome = document.getElementById("logoHome");
+  const backHome = document.getElementById("backHome");
+  const exitSearch = document.getElementById("exitSearch");
+
+  const viewer = document.getElementById("viewer");
+  const closeViewer = document.getElementById("closeViewer");
+  const viewerImage = document.getElementById("viewerImage");
+  const viewerTitle = document.getElementById("viewerTitle");
+  const viewerCategory = document.getElementById("viewerCategory");
+  const imageLoading = document.getElementById("imageLoading");
+  const imageError = document.getElementById("imageError");
+  const viewerStage = document.getElementById("viewerStage");
+
+  let activeCategory = null;
+  let previousMode = "home";
+
+  function showOnly(view) {
+    [homeView, categoryView, searchView].forEach(v => v.classList.add("is-hidden"));
+    view.classList.remove("is-hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function updateNav() {
+    bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.id === activeCategory);
+    });
+  }
+
+  function renderHome() {
+    categoryGrid.innerHTML = DATA.categories.map(cat => `
+      <button class="category-tile" data-id="${cat.id}" type="button">
+        <span class="tile-mark">${glyphs[cat.id] || "✦"}</span>
+        <h3>${cat.title}</h3>
+        <p>${cat.subtitle}</p>
+        <span class="tile-foot">
+          <span>${cat.items.length} 项内容</span>
+          <span class="tile-arrow">›</span>
+        </span>
+      </button>
+    `).join("");
+
+    categoryGrid.querySelectorAll(".category-tile").forEach(btn => {
+      btn.addEventListener("click", () => openCategory(btn.dataset.id));
+    });
+  }
+
+  function renderBottomNav() {
+    bottomNav.innerHTML = DATA.categories.map(cat => `
+      <button type="button" class="nav-item" data-id="${cat.id}">
+        <span class="nav-glyph">${glyphs[cat.id] || "✦"}</span>
+        <span class="nav-label">${shortLabel(cat.id, cat.title)}</span>
+      </button>
+    `).join("");
+
+    bottomNav.querySelectorAll(".nav-item").forEach(btn => {
+      btn.addEventListener("click", () => {
+        searchInput.value = "";
+        clearSearch.classList.remove("show");
+        openCategory(btn.dataset.id);
+      });
+    });
+  }
+
+  function shortLabel(id, title) {
+    if (id === "basic") return "基础";
+    if (id === "fun") return "趣味";
+    if (id === "fortune") return "一日一签";
+    if (id === "rules") return "须知";
+    return title;
+  }
+
+  function buildCard(item, category) {
+    return `
+      <article class="price-card" tabindex="0"
+        data-full="${item.full}"
+        data-title="${escapeAttr(item.title)}"
+        data-category="${escapeAttr(category.title)}">
+        <div class="price-thumb">
+          <img src="${item.thumb}" alt="${escapeAttr(item.title)}"
+               loading="lazy" decoding="async" />
+          <span class="card-category-mini">${category.title}</span>
+        </div>
+        <div class="price-info">
+          <h3>${item.title}</h3>
+          <div class="english">${item.english || ""}</div>
+          <p class="description">${item.description || ""}</p>
+          <div class="card-open">
+            <span>查看高清价目表</span>
+            <i>›</i>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function bindCards(container) {
+    container.querySelectorAll(".price-card").forEach(card => {
+      const open = () => openViewer({
+        full: card.dataset.full,
+        title: card.dataset.title,
+        category: card.dataset.category
+      });
+      card.addEventListener("click", open);
+      card.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") open();
+      });
+    });
+  }
+
+  function openCategory(id) {
+    const cat = DATA.categories.find(c => c.id === id);
+    if (!cat) return;
+
+    activeCategory = id;
+    previousMode = "category";
+    updateNav();
+
+    categoryMark.textContent = glyphs[id] || "✦";
+    categoryTitle.textContent = cat.title;
+    categorySubtitle.textContent = cat.subtitle;
+    categoryCount.textContent = `${cat.items.length} 项`;
+
+    cardList.innerHTML = cat.items.map(item => buildCard(item, cat)).join("");
+    bindCards(cardList);
+
+    showOnly(categoryView);
+  }
+
+  function goHome() {
+    activeCategory = null;
+    previousMode = "home";
+    searchInput.value = "";
+    clearSearch.classList.remove("show");
+    updateNav();
+    showOnly(homeView);
+  }
+
+  function runSearch(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      if (previousMode === "category" && activeCategory) openCategory(activeCategory);
+      else goHome();
+      return;
+    }
+
+    const results = [];
+    DATA.categories.forEach(cat => {
+      cat.items.forEach(item => {
+        const haystack = `${item.title} ${item.english || ""} ${item.description || ""} ${cat.title} ${cat.subtitle}`.toLowerCase();
+        if (haystack.includes(q)) results.push({ item, cat });
+      });
+    });
+
+    searchKeyword.textContent = `“${query.trim()}”`;
+    searchCount.textContent = `${results.length} 项`;
+    searchList.innerHTML = results.map(r => buildCard(r.item, r.cat)).join("");
+    bindCards(searchList);
+    emptySearch.classList.toggle("is-hidden", results.length !== 0);
+
+    showOnly(searchView);
+  }
+
+  searchInput.addEventListener("input", () => {
+    const value = searchInput.value;
+    clearSearch.classList.toggle("show", value.length > 0);
+    runSearch(value);
+  });
+
+  clearSearch.addEventListener("click", () => {
+    searchInput.value = "";
+    clearSearch.classList.remove("show");
+    searchInput.focus();
+    if (activeCategory) openCategory(activeCategory);
+    else goHome();
+  });
+
+  exitSearch.addEventListener("click", () => {
+    searchInput.value = "";
+    clearSearch.classList.remove("show");
+    if (activeCategory) openCategory(activeCategory);
+    else goHome();
+  });
+
+  backHome.addEventListener("click", goHome);
+  logoHome.addEventListener("click", goHome);
+
+  function openViewer(item) {
+    viewerTitle.textContent = item.title;
+    viewerCategory.textContent = item.category;
+
+    // 每次打开都重置三个状态，彻底解决“加载中文字不消失”
+    viewerImage.classList.add("is-hidden");
+    imageError.classList.add("is-hidden");
+    imageLoading.classList.remove("is-hidden");
+
+    viewerImage.removeAttribute("src");
+    viewerImage.alt = item.title;
+    viewerStage.scrollTop = 0;
+
+    viewer.classList.remove("is-hidden");
+    viewer.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    // 先用独立 Image 对象加载，成功后再显示真正图片
+    const preloader = new Image();
+
+    preloader.onload = async () => {
+      viewerImage.src = item.full;
+
+      try {
+        if (viewerImage.decode) {
+          await viewerImage.decode();
+        }
+      } catch (_) {
+        // decode 失败也不影响显示
+      }
+
+      imageLoading.classList.add("is-hidden");
+      imageError.classList.add("is-hidden");
+      viewerImage.classList.remove("is-hidden");
+    };
+
+    preloader.onerror = () => {
+      imageLoading.classList.add("is-hidden");
+      viewerImage.classList.add("is-hidden");
+      imageError.classList.remove("is-hidden");
+    };
+
+    preloader.src = item.full;
+  }
+
+  function closeImageViewer() {
+    viewer.classList.add("is-hidden");
+    viewer.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    viewerImage.classList.add("is-hidden");
+    viewerImage.removeAttribute("src");
+    imageLoading.classList.remove("is-hidden");
+    imageError.classList.add("is-hidden");
+  }
+
+  closeViewer.addEventListener("click", closeImageViewer);
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !viewer.classList.contains("is-hidden")) {
+      closeImageViewer();
+    }
+  });
+
+  function escapeAttr(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  renderHome();
+  renderBottomNav();
+  updateNav();
 })();

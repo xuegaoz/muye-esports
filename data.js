@@ -45,7 +45,7 @@ window.MUYE_DATA = {
         {
           "title": "BINGO连连看",
           "english": "Vintage Bingo Challenge",
-          "description": "自选几连Bingo，带出对应物资点亮格子，完成连线即可通关。",
+          "description": "自选宾果路线，带出对应物资点亮格子，完成连线即可通关。",
           "thumb": "images/fun/thumbs/vintage-bingo-challenge.webp",
           "full": "images/fun/full/vintage-bingo-challenge.webp"
         },
@@ -59,7 +59,7 @@ window.MUYE_DATA = {
         {
           "title": "航天黑洞单",
           "english": "Black Hole Challenge",
-          "description": "指定航天黑洞收益被吞噬，完成非黑洞的有效撤离，解锁对应档位保底。",
+          "description": "指定航天黑洞点位逐一攻克，完成不同点位的有效撤离，解锁对应档位保底。",
           "thumb": "images/fun/thumbs/black-hole-challenge.webp",
           "full": "images/fun/full/black-hole-challenge.webp"
         },
@@ -88,21 +88,21 @@ window.MUYE_DATA = {
         {
           "title": "一日一签 · 总览",
           "english": "Fortune Overview",
-          "description": "八签总览图",
+          "description": "每日限定盲盒签，首局出生点决定今日签文，一次开签解锁对应任务。",
           "thumb": "images/fortune/thumbs/fortune-overview.webp",
           "full": "images/fortune/full/fortune-overview.webp"
         },
         {
           "title": "签文解析 · 壹",
           "english": "Fortune Notes I",
-          "description": "01—04 签文解析",
+          "description": "01—04签文解析：回春签、军火签、满载签与命运签。",
           "thumb": "images/fortune/thumbs/fortune-detail-1.webp",
           "full": "images/fortune/full/fortune-detail-1.webp"
         },
         {
           "title": "签文解析 · 贰",
           "english": "Fortune Notes II",
-          "description": "05—08 签文解析",
+          "description": "05—08签文解析：双面签、弹药签、许愿签与巡航签。",
           "thumb": "images/fortune/thumbs/fortune-detail-2.webp",
           "full": "images/fortune/full/fortune-detail-2.webp"
         }

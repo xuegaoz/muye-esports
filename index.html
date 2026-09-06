@@ -1,49 +1,136 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#F7F1E8">
-<title>牧野电竞 · 在线价目册</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes" />
+  <meta name="theme-color" content="#f7f1e9" />
+  <meta name="description" content="牧野电竞在线价目册" />
+  <title>牧野电竞 · 在线价目册</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-<div class="paper-noise"></div>
-<header class="hero">
-  <p class="eyebrow">MUYE ESPORTS</p>
-  <h1>牧野电竞</h1>
-  <p class="slogan">向野而行，满载而归。</p>
-  <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="搜索价目表…"><button id="clearSearch">×</button></div>
-</header>
-<main>
-  <section id="homeView">
-    <div class="home-head"><p>PRICE DIRECTORY</p><h2>选择你想浏览的目录</h2></div>
-    <div id="categoryGrid" class="category-grid"></div>
-  </section>
+  <div class="site-bg" aria-hidden="true"></div>
 
-  <section id="listView" hidden>
-    <button id="backBtn" class="back-btn">← 返回目录</button>
-    <div class="section-head">
-      <div><p class="section-kicker" id="sectionKicker">CATEGORY</p><h2 id="sectionTitle"></h2><p id="sectionDesc" class="section-desc"></p></div>
-      <span id="itemCount" class="count-pill"></span>
-    </div>
-    <div id="cardGrid" class="card-grid"></div>
-  </section>
+  <div class="app-shell">
+    <header class="brand-header" id="brandHeader">
+      <button class="logo-button" id="logoHome" aria-label="返回分类首页">
+        <img src="assets/muye-logo.webp" class="brand-logo" alt="牧野电竞 MUYE ESPORTS" />
+      </button>
 
-  <section id="searchView" hidden>
-    <button id="searchBackBtn" class="back-btn">← 返回目录</button>
-    <div class="section-head"><div><p class="section-kicker">SEARCH</p><h2 id="searchTitle">搜索结果</h2></div><span id="searchCount" class="count-pill"></span></div>
-    <div id="searchGrid" class="card-grid"></div>
-    <div id="emptyState" class="empty-state" hidden><h3>没有找到相关价目表</h3><p>试试其他关键词。</p></div>
-  </section>
-</main>
-<footer><div class="footer-line"></div><p>牧野电竞 · MUYE ESPORTS</p><small>欢迎来到牧野电竞，今天也请尽情享受游戏吧！</small></footer>
-<div id="viewer" class="viewer" aria-hidden="true">
-  <div class="viewer-backdrop" data-close-viewer></div>
-  <div class="viewer-shell">
-    <div class="viewer-topbar"><div><p id="viewerCategory"></p><h3 id="viewerTitle"></h3><small id="viewerEnglish"></small></div><button class="close-btn" data-close-viewer>×</button></div>
-    <div class="viewer-stage"><div id="imageLoading" class="image-loading">高清图加载中…</div><img id="viewerImage" hidden alt=""></div>
-    <div class="viewer-tip">长图上下滑动查看</div>
+      <p class="brand-tag">ONLINE PRICE BOOK</p>
+      <p class="brand-slogan">向野而行，满载而归。</p>
+
+      <label class="search-box">
+        <span class="search-icon">⌕</span>
+        <input id="searchInput" type="search" placeholder="搜索玩法 / 价目表…" autocomplete="off" />
+        <button id="clearSearch" class="clear-search" type="button" aria-label="清空搜索">×</button>
+      </label>
+    </header>
+
+    <main class="main-content">
+      <!-- 分类首页 -->
+      <section id="homeView" class="view">
+        <div class="section-title-row">
+          <div>
+            <span class="mini-label">MUYE COLLECTION</span>
+            <h1>想看哪一类？</h1>
+          </div>
+          <span class="total-badge">4 个目录</span>
+        </div>
+
+        <div id="categoryGrid" class="category-grid"></div>
+
+        <div class="home-note">
+          <span>✦</span>
+          <p>所有价目表均为手机轻量版缩略图，点击后才加载高清长图。</p>
+        </div>
+      </section>
+
+      <!-- 分类列表 -->
+      <section id="categoryView" class="view is-hidden">
+        <div class="category-head">
+          <button id="backHome" class="back-button" type="button">‹ 返回分类</button>
+          <span id="categoryCount" class="category-count"></span>
+        </div>
+
+        <div class="category-title-block">
+          <div id="categoryMark" class="category-mark">✦</div>
+          <div>
+            <span class="mini-label">CATEGORY</span>
+            <h2 id="categoryTitle"></h2>
+            <p id="categorySubtitle"></p>
+          </div>
+        </div>
+
+        <div id="cardList" class="card-list"></div>
+      </section>
+
+      <!-- 搜索结果 -->
+      <section id="searchView" class="view is-hidden">
+        <div class="category-head">
+          <button id="exitSearch" class="back-button" type="button">‹ 返回</button>
+          <span id="searchCount" class="category-count"></span>
+        </div>
+
+        <div class="category-title-block search-title-block">
+          <div class="category-mark">⌕</div>
+          <div>
+            <span class="mini-label">SEARCH</span>
+            <h2>搜索结果</h2>
+            <p id="searchKeyword"></p>
+          </div>
+        </div>
+
+        <div id="searchList" class="card-list"></div>
+
+        <div id="emptySearch" class="empty-search is-hidden">
+          <div>⌕</div>
+          <strong>没有找到相关价目表</strong>
+          <p>可以试试“数字”“一日一签”“基础”等关键词。</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div></div>
+      <p>牧野电竞 · MUYE ESPORTS</p>
+      <span>欢迎来到牧野电竞，今天也请尽情享受游戏吧！</span>
+    </footer>
   </div>
-</div>
-<script src="data.js"></script><script src="app.js"></script>
-</body></html>
+
+  <!-- 手机底部分类导航 -->
+  <nav id="bottomNav" class="bottom-nav" aria-label="价目表分类"></nav>
+
+  <!-- 高清图查看器 -->
+  <div id="viewer" class="viewer is-hidden" aria-hidden="true">
+    <header class="viewer-header">
+      <button id="closeViewer" class="viewer-close" type="button" aria-label="关闭">‹</button>
+      <div class="viewer-title">
+        <span id="viewerCategory"></span>
+        <strong id="viewerTitle"></strong>
+      </div>
+      <span class="viewer-spacer"></span>
+    </header>
+
+    <div id="viewerStage" class="viewer-stage">
+      <div id="imageLoading" class="image-loading">
+        <span class="loading-spinner"></span>
+        <p>高清图片加载中</p>
+      </div>
+
+      <div id="imageError" class="image-error is-hidden">
+        <strong>图片加载失败</strong>
+        <p>请检查网络后重新打开。</p>
+      </div>
+
+      <img id="viewerImage" class="viewer-image is-hidden" alt="" />
+    </div>
+
+    <div class="viewer-bottom-tip">长图可上下滑动 · 双指可缩放</div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
