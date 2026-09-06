@@ -23,13 +23,13 @@ window.MUYE_DATA = {
       items: [
         {
           title: "基础价目表",
-          image: "images/basic/basic-price.svg",
-          description: "这里替换成你的基础价目表长图。"
+          image: "images/basic/basic-price.png",
+          description: "汇总牧野电竞日常服务价格，包含体验单、物资保底单与陪玩小时单等基础项目。"
         },
         {
-          title: "保底 / 常用项目",
-          image: "images/basic/guarantee.svg",
-          description: "可继续添加店内常用项目。"
+          title: "牧野礼物单",
+          image: "images/basic/present-list.png",
+          description: "为陪玩与护航准备的虚拟心意礼物，从小小心意到特别支持，都可以在这里自由选择。"
         }
       ]
     },
@@ -41,19 +41,39 @@ window.MUYE_DATA = {
       items: [
         {
           title: "数字炸弹",
-          image: "images/fun/digital-bomb.svg",
-          description: "趣味单示例卡片，可直接替换图片。"
+          image: "images/fun/number-bomb.png",
+          description: "完成任务赢取猜数机会，范围越猜越小，命中秘密数字即可直接结单。"
         },
         {
-          title: "草原上的世纪婚礼",
-          image: "images/fun/wedding.svg",
-          description: "趣味单示例卡片，可直接替换图片。"
+          title: "干员淘汰赛",
+          image: "images/fun/operator-knockout.jpg",
+          description: "16名干员轮番上阵，用过即进入BAN位，完成3组干员挑战才算真正通关。"
         },
         {
-          title: "恋爱要从一束花开始",
-          image: "images/fun/flower.svg",
-          description: "趣味单示例卡片，可直接替换图片。"
-        }
+          title: "利滚利",
+          image: "images/fun/rolling-fortune.jpg",
+          description: "五局内冲击小金与格红目标，未完成则触发“利息”，重新开启下一轮挑战。"
+        },
+        {
+          title: "小金！给我上桌",
+          image: "images/fun/little-gold.png",
+          description: "点名指定小金或挑战重复收集，把随机出货变成一场越集越上头的收藏挑战。"
+        },
+        {
+          title: "环太平洋",
+          image: "images/fun/pacific-circuit-challenge.jpg",
+          description: "在航天地图挑战多个不同撤离点，每成功解锁一站，向最终通关继续推进。"
+        },
+        {
+          title: "航天黑洞单",
+          image: "images/fun/black-hole-challenge.png",
+          description: "指定航天黑洞收益被吞噬，完成非黑洞的有效撤离，解锁对应档位保底。"
+        },
+        {
+          title: "BINGO连连看",
+          image: "images/fun/bingo-challenge.png",
+          description: "自选几连Bingo，带出对应物资点亮格子，完成连线即可通关。"
+        },
       ]
     },
     {
