@@ -1,79 +1,49 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#F7F1E8" />
-  <title>牧野电竞 · 在线价目册</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F7F1E8">
+<title>牧野电竞 · 在线价目册</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="paper-noise"></div>
+<div class="paper-noise"></div>
+<header class="hero">
+  <p class="eyebrow">MUYE ESPORTS</p>
+  <h1>牧野电竞</h1>
+  <p class="slogan">向野而行，满载而归。</p>
+  <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="搜索价目表…"><button id="clearSearch">×</button></div>
+</header>
+<main>
+  <section id="homeView">
+    <div class="home-head"><p>PRICE DIRECTORY</p><h2>选择你想浏览的目录</h2></div>
+    <div id="categoryGrid" class="category-grid"></div>
+  </section>
 
-  <header class="hero">
-    <div class="brand-badge" aria-hidden="true">
-      <span class="horn">∿</span>
-      <span class="mountain">⌁</span>
+  <section id="listView" hidden>
+    <button id="backBtn" class="back-btn">← 返回目录</button>
+    <div class="section-head">
+      <div><p class="section-kicker" id="sectionKicker">CATEGORY</p><h2 id="sectionTitle"></h2><p id="sectionDesc" class="section-desc"></p></div>
+      <span id="itemCount" class="count-pill"></span>
     </div>
-    <p class="eyebrow">MUYE ESPORTS</p>
-    <h1>牧野电竞</h1>
-    <p class="slogan">向野而行，满载而归。</p>
+    <div id="cardGrid" class="card-grid"></div>
+  </section>
 
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input id="searchInput" type="search" placeholder="搜索你想看的价目表…" autocomplete="off" />
-      <button id="clearSearch" aria-label="清空搜索">×</button>
-    </div>
-  </header>
-
-  <main>
-    <nav class="category-tabs" id="categoryTabs" aria-label="价目表分类"></nav>
-
-    <section id="overview" class="overview"></section>
-
-    <section class="content-panel">
-      <div class="section-head">
-        <div>
-          <p class="section-kicker" id="sectionKicker">PRICE LIST</p>
-          <h2 id="sectionTitle">全部价目表</h2>
-        </div>
-        <span class="count-pill" id="itemCount">0 项</span>
-      </div>
-
-      <div id="emptyState" class="empty-state" hidden>
-        <div class="empty-icon">⌕</div>
-        <h3>没有找到相关价目表</h3>
-        <p>试试换一个关键词，或切换其他分类。</p>
-      </div>
-
-      <div id="cardGrid" class="card-grid"></div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="footer-line"></div>
-    <p>牧野电竞 · MUYE ESPORTS</p>
-    <small>欢迎来到牧野电竞，今天也请尽情享受游戏吧！</small>
-  </footer>
-
-  <div id="viewer" class="viewer" aria-hidden="true">
-    <div class="viewer-backdrop" data-close-viewer></div>
-    <div class="viewer-shell">
-      <div class="viewer-topbar">
-        <div>
-          <p id="viewerCategory"></p>
-          <h3 id="viewerTitle"></h3>
-        </div>
-        <button class="close-btn" data-close-viewer aria-label="关闭">×</button>
-      </div>
-      <div class="viewer-stage">
-        <img id="viewerImage" alt="" />
-      </div>
-      <div class="viewer-tip">双指缩放 / 长图上下滑动查看</div>
-    </div>
+  <section id="searchView" hidden>
+    <button id="searchBackBtn" class="back-btn">← 返回目录</button>
+    <div class="section-head"><div><p class="section-kicker">SEARCH</p><h2 id="searchTitle">搜索结果</h2></div><span id="searchCount" class="count-pill"></span></div>
+    <div id="searchGrid" class="card-grid"></div>
+    <div id="emptyState" class="empty-state" hidden><h3>没有找到相关价目表</h3><p>试试其他关键词。</p></div>
+  </section>
+</main>
+<footer><div class="footer-line"></div><p>牧野电竞 · MUYE ESPORTS</p><small>欢迎来到牧野电竞，今天也请尽情享受游戏吧！</small></footer>
+<div id="viewer" class="viewer" aria-hidden="true">
+  <div class="viewer-backdrop" data-close-viewer></div>
+  <div class="viewer-shell">
+    <div class="viewer-topbar"><div><p id="viewerCategory"></p><h3 id="viewerTitle"></h3><small id="viewerEnglish"></small></div><button class="close-btn" data-close-viewer>×</button></div>
+    <div class="viewer-stage"><div id="imageLoading" class="image-loading">高清图加载中…</div><img id="viewerImage" hidden alt=""></div>
+    <div class="viewer-tip">长图上下滑动查看</div>
   </div>
-
-  <script src="data.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+</div>
+<script src="data.js"></script><script src="app.js"></script>
+</body></html>
